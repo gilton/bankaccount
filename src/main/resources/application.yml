@@ -1,0 +1,21 @@
+spring:
+  profiles.actives: "development"
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicitStrategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    properties:
+      hibernate:
+        formatSql: true
+        jdbc:
+          lob:
+            non-contextual-creation: true
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5433/banksling
+    username: test
+    password: test
+    driverClassName: org.postgresql.Driver
