@@ -7,7 +7,6 @@ public enum Sexo {
 	MASCULINO("M", "Masculino"),
 	FEMININO("F", "Feminino");
 	
-	@JsonValue
 	private String chave;
 	@JsonValue
 	private String valor;
@@ -16,5 +15,23 @@ public enum Sexo {
 		this.chave = chave;
 		this.valor = valor; 
 	}
+
+	public String getChave() {
+		return chave;
+	}
+
+	public void setChave(String chave) {
+		this.chave = chave;
+	}
+
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+	
+	
 	
 }
