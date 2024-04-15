@@ -7,12 +7,17 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.models.enums.Sexo;
 
-import jakarta.persistence.CascadeType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -32,6 +37,7 @@ public class Cliente implements Serializable {
     @Column(nullable = false, unique = true)
     private String cpf;
     
+    @Enumerated(EnumType.STRING)
     private Sexo sexo;
     
     @Column(name = "dat_nascido")
@@ -41,9 +47,15 @@ public class Cliente implements Serializable {
     
     private String email;
     
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idEndereco")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Endereco endereco;
 
+    public Cliente() {
+    	this.endereco = new Endereco();	
+    }
+    
 //    GETTs and SETTs
     public UUID getIdCliente() {
         return idCliente;
@@ -68,16 +80,17 @@ public class Cliente implements Serializable {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+    
 
     public Sexo getSexo() {
-        return sexo;
-    }
+		return sexo;
+	}
 
-    public void setSexo(Sexo sexo) {
-        this.sexo = sexo;
-    }
+	public void setSexo(Sexo sexo) {
+		this.sexo = sexo;
+	}
 
-    public LocalDate getDatNascido() {
+	public LocalDate getDatNascido() {
         return datNascido;
     }
 
