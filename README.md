@@ -20,12 +20,13 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 ```shell
 mvn spring-boot:run
 ```
-
+<!---
 If you want to access the app from outside your OpenShift installation, you have to expose the springboot-sample-app service:
 
 ```shell
 oc expose springboot-sample-app --hostname=www.example.com
 ```
+-->
 
 After the application runs, navigate to `http://localhost:8080/swagger-ui.html` in your web browser to access the Swagger UI portal.
 
