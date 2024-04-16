@@ -3,6 +3,7 @@ package org.labs.bank.banksling.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import org.labs.bank.banksling.models.enums.Sexo;
@@ -18,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -44,7 +46,6 @@ public class Cliente implements Serializable {
     private LocalDate datNascido;
     
     private String celular;
-    
     private String email;
     
     @OneToOne(fetch = FetchType.LAZY)
@@ -52,9 +53,14 @@ public class Cliente implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Endereco endereco;
 
-    public Cliente() {
-    	this.endereco = new Endereco();	
-    }
+    @OneToMany(mappedBy = "cliente", orphanRemoval = true)
+    private List<Conta> contas;
+    
+    @OneToOne
+    @JoinColumn(name = "idBanco")
+    private Banco banco;
+    
+    public Cliente() { }
     
 //    GETTs and SETTs
     public UUID getIdCliente() {

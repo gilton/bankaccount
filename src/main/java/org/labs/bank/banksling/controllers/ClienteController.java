@@ -60,7 +60,7 @@ public class ClienteController {
 		
 		Optional<Cliente> clienteOpt = repository.findByCPF( cliente.getCpf() );
 		if(clienteOpt.isPresent() && Objects.nonNull(clienteOpt.get().getIdCliente()) ) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Cliente encontrado.\nFavor informar novo Cliente.");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Cliente já registrado.\nFavor informar um novo Cliente.");
 		}
 		
 		salvarOuAtualizarEndereco(cliente);
@@ -99,8 +99,9 @@ public class ClienteController {
 		var enderecoOpt = enderecoRepository.findByRuaENumero(cliente.getEndereco().getRua(), cliente.getEndereco().getNumero());
 		if (!enderecoOpt.isPresent()) {
 			enderecoRepository.saveAndFlush(cliente.getEndereco());
+			return;
 		}
-		
+		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
 	}
 	
 	private Optional<Endereco> encontrarEnderecoPorIDSenaoSalve(Optional<Cliente> clienteOpt) {
