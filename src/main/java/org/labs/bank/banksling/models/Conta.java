@@ -44,6 +44,21 @@ public class Conta implements Serializable {
 	@JoinColumn(name = "idCliente")
 	private Cliente cliente;
 	
+
+//	 Methods
+	public void depositar(Double valor) {
+		this.setSaldo(getSaldo() + valor);
+	}
+	
+	public void sacar(Double valor) {
+		this.setSaldo(getSaldo() - valor);
+	}
+	
+	public void transferencia(Conta beneficiario, Double valor) {
+		beneficiario.setSaldo(beneficiario.getSaldo() + valor);
+		this.setSaldo(getSaldo() - valor);
+	}
+	
 //  GETTs and SETTs
 	public UUID getIdConta() {
 		return idConta;
