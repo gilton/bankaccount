@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.models.enums.TipoConta;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,10 +40,12 @@ public class Conta implements Serializable {
 	
 	@OneToOne
 	@JoinColumn(name = "idBanco")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Banco banco;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idCliente")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Cliente cliente;
 	
 
