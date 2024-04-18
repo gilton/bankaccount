@@ -23,6 +23,9 @@ public class Banco implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idBanco;
 	
+	@Column(name = "codigo_banco")
+	private Integer codigoBanco;
+	
 	@Column(name = "nom_banco")
 	private String nomBanco;
 	
@@ -40,6 +43,14 @@ public class Banco implements Serializable {
 
 	public void setIdBanco(UUID idBanco) {
 		this.idBanco = idBanco;
+	}
+
+	public Integer getCodigoBanco() {
+		return codigoBanco;
+	}
+
+	public void setCodigoBanco(Integer codigoBanco) {
+		this.codigoBanco = codigoBanco;
 	}
 
 	public String getNomBanco() {
