@@ -41,7 +41,6 @@ public class ContaController {
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
-	
 	@GetMapping
 	public ResponseEntity<List<Conta>> getAllContas(){
 		List<Conta> contaList = repository.findAll();
@@ -54,7 +53,7 @@ public class ContaController {
 		if( contaOpt.isEmpty() ) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrado.\nTente novamente.");
 		}
-		return ResponseEntity.status(HttpStatus.FOUND).body(contaOpt.get());
+		return ResponseEntity.status(HttpStatus.OK).body(contaOpt.get());
 	}
 	
 	@PostMapping
