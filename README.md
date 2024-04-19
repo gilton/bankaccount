@@ -2,7 +2,7 @@
 
 [![License](http://img.shields.io/:License-GNU_3.0-blue.svg)](https://github.com/gilton/bankaccount/blob/main/LICENSE)
 
-Minimal [Spring Boot](http://projects.spring.io/spring-boot/) sample bank app.
+Minimal [Spring Boot](http://projects.spring.io/spring-boot/) 3.x.x version sample bank app.
 
 ## Requirements
 
