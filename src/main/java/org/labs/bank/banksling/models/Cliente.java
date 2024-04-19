@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.models.enums.Sexo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -42,6 +43,7 @@ public class Cliente implements Serializable {
     @Enumerated(EnumType.STRING)
     private Sexo sexo;
     
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "dat_nascido")
     private LocalDate datNascido;
     

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.dtos.BancoRecordDto;
 import org.labs.bank.banksling.models.Banco;
-import org.labs.bank.banksling.repositories.BancoRepository;
+import org.labs.bank.banksling.services.BancoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,17 +30,17 @@ import jakarta.validation.Valid;
 public class BancoController {
 
 	@Autowired
-	private BancoRepository repository;
+	private BancoService service;
 	
 	@GetMapping
 	public ResponseEntity<List<Banco>> getAllBancos(){
-		List<Banco> bancoList = repository.findAll();
+		List<Banco> bancoList = service.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(bancoList);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getOneBanco(@PathVariable(value="id") UUID id){
-		Optional<Banco> bancoOpt = repository.findById(id);
+		Optional<Banco> bancoOpt = service.findById(id);
 		if( bancoOpt.isEmpty() ) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banco não encontrado.\nTente novamente.");
 		}
@@ -52,32 +52,36 @@ public class BancoController {
 		var bank = new Banco();
 		BeanUtils.copyProperties(bancoRecordDto, bank);
 
-		Optional<Banco> bancoOpt = repository.findByCodigo(bank.getCodigoBanco());
+		Optional<Banco> bancoOpt = service.findByCodigo(bank.getCodigoBanco());
 		if( bancoOpt.isPresent() && Objects.nonNull(bancoOpt.get().getIdBanco()) ) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Banco já registrado.\nFavor informa um novo Banco.");
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(bank));
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(bank));
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateBanco(@PathVariable(value="id") UUID id,
 												@RequestBody @Valid BancoRecordDto bancoRecordDto) {
 		
-		Optional<Banco> bankOpt = repository.findById(id);
+		Optional<Banco> bankOpt = service.findById(id);
 		if(bankOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banco não encontrado para editar.");
 		}
 		BeanUtils.copyProperties(bancoRecordDto, bankOpt.get());
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save( bankOpt.get() ));
+		
+		return ResponseEntity.status(HttpStatus.OK).body(service.save( bankOpt.get() ));
 	}
+
+	
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteBanco(@PathVariable(value="id") UUID id) {
-		Optional<Banco> bankOpt = repository.findById(id);
+		Optional<Banco> bankOpt = service.findById(id);
 		if(bankOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banco não encontrado para excluir.");
 		}
-		repository.delete(bankOpt.get());
+		service.delete(bankOpt.get());
 		return ResponseEntity.status(HttpStatus.OK).body("Banco deleted com successo.");
 	}
+
 }
