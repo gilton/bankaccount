@@ -7,9 +7,8 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.dtos.ClienteRecordDto;
 import org.labs.bank.banksling.models.Cliente;
-import org.labs.bank.banksling.models.Endereco;
-import org.labs.bank.banksling.repositories.ClienteRepository;
 import org.labs.bank.banksling.repositories.EnderecoRepository;
+import org.labs.bank.banksling.services.ClienteService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,20 +31,20 @@ import jakarta.validation.Valid;
 public class ClienteController {
 
 	@Autowired
-	ClienteRepository repository;
+	ClienteService service;
 
 	@Autowired
 	EnderecoRepository enderecoRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClientes(){
-		List<Cliente> clientesList = repository.findAll();
+		List<Cliente> clientesList = service.findAll();
 		return ResponseEntity.status(HttpStatus.OK).body(clientesList);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getOneCliente(@PathVariable(value="id") UUID id){
-		Optional<Cliente> clienteOpt = repository.findById(id);
+		Optional<Cliente> clienteOpt = service.findById(id);
 		if(clienteOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
 		}
@@ -58,60 +57,61 @@ public class ClienteController {
 		var cliente = new Cliente();
 		BeanUtils.copyProperties(clienteRecordDto, cliente);
 		
-		Optional<Cliente> clienteOpt = repository.findByCPF( cliente.getCpf() );
+		Optional<Cliente> clienteOpt = service.findByCPF( cliente.getCpf() );
 		if(clienteOpt.isPresent() && Objects.nonNull(clienteOpt.get().getIdCliente()) ) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Cliente já registrado.\nFavor informar um novo Cliente.");
 		}
 		
-		salvarOuAtualizarEndereco(cliente);
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(cliente));
+//		salvarOuAtualizarEndereco(cliente);
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(cliente));
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> updateCliente(@PathVariable(value="id") UUID id,
 												@RequestBody @Valid ClienteRecordDto clienteRecordDto) {
-		Optional<Cliente> clienteOpt = repository.findById(id);
+		Optional<Cliente> clienteOpt = service.findById(id);
 		if(clienteOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
 		}
 		
-		var enderecoOpt = encontrarEnderecoPorIDSenaoSalve(clienteOpt);
+//		var enderecoOpt = encontrarEnderecoPorIDSenaoSalve(clienteOpt);
 		var cliente = clienteOpt.get();
 		BeanUtils.copyProperties(clienteRecordDto, cliente);
 		
-		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save(cliente));
+//		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(cliente));
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteCliente(@PathVariable(value="id") UUID id) {
-		Optional<Cliente> clienteOptO = repository.findById(id);
+		Optional<Cliente> clienteOptO = service.findById(id);
 		if(clienteOptO.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
 		}
-		repository.delete(clienteOptO.get());
+		service.delete(clienteOptO.get());
 		return ResponseEntity.status(HttpStatus.OK).body("Cliente deleted com successo.");
 	}
 	
 	
 //	Auxiliar Methods
-	private void salvarOuAtualizarEndereco(Cliente cliente) {
-		var enderecoOpt = enderecoRepository.findByRuaENumero(cliente.getEndereco().getRua(), cliente.getEndereco().getNumero());
-		if (!enderecoOpt.isPresent()) {
-			enderecoRepository.saveAndFlush(cliente.getEndereco());
-			return;
-		}
-		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
-	}
+//	private void salvarOuAtualizarEndereco(Cliente cliente) {
+//		var enderecoOpt = enderecoRepository.findByRuaENumero(cliente.getEndereco().getRua(), cliente.getEndereco().getNumero());
+//		if (!enderecoOpt.isPresent()) {
+//			enderecoRepository.saveAndFlush(cliente.getEndereco());
+//			return;
+//		}
+//		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
+//	}
 	
-	private Optional<Endereco> encontrarEnderecoPorIDSenaoSalve(Optional<Cliente> clienteOpt) {
-		var enderecoId = clienteOpt.get().getEndereco().getIdEndereco();
-		Optional<Endereco> enderecoOpt = enderecoRepository.findById(enderecoId);
-		
-		if( enderecoOpt.isEmpty() ) {
-			enderecoRepository.saveAndFlush(clienteOpt.get().getEndereco());
-			enderecoOpt = Optional.of(clienteOpt.get().getEndereco());
-		}
-		return enderecoOpt;
-	}
+//	private Optional<Endereco> encontrarEnderecoPorIDSenaoSalve(Optional<Cliente> clienteOpt) {
+//		var enderecoId = clienteOpt.get().getEndereco().getIdEndereco();
+//		Optional<Endereco> enderecoOpt = enderecoRepository.findById(enderecoId);
+//		
+//		if( enderecoOpt.isEmpty() ) {
+//			enderecoRepository.saveAndFlush(clienteOpt.get().getEndereco());
+//			enderecoOpt = Optional.of(clienteOpt.get().getEndereco());
+//		}
+//		return enderecoOpt;
+//	}
+	
 }
