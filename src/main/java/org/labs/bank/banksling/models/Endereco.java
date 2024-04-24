@@ -3,6 +3,8 @@ package org.labs.bank.banksling.models;
 import java.io.Serializable;
 import java.util.UUID;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_ENDERECO")
+@DynamicUpdate
 public class Endereco implements Serializable {
 
 	private static final long serialVersionUID = 1L;

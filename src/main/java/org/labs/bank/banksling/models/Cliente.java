@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.labs.bank.banksling.models.enums.Sexo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -26,6 +27,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_CLIENTE")
+@DynamicUpdate
 public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
