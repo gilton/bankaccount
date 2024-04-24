@@ -3,6 +3,7 @@ package org.labs.bank.banksling.models;
 import java.io.Serializable;
 import java.util.UUID;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.labs.bank.banksling.models.enums.TipoConta;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -21,6 +22,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_CONTA")
+@DynamicUpdate
 public class Conta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
