@@ -44,7 +44,7 @@ public class BancoController {
 		if( bancoOpt.isEmpty() ) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banco não encontrado.\nTente novamente.");
 		}
-		return ResponseEntity.status(HttpStatus.FOUND).body(bancoOpt.get());
+		return ResponseEntity.status(HttpStatus.OK).body(bancoOpt.get());
 	}
 	
 	@PostMapping
