@@ -3,7 +3,6 @@ package org.labs.bank.banksling.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,6 +11,7 @@ import org.labs.bank.banksling.models.enums.Sexo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -39,7 +38,6 @@ public class Cliente implements Serializable {
     @Column(name = "nom_cliente")
     private String nomCliente;
     
-    @Column(nullable = false, unique = true)
     private String cpf;
     
     @Enumerated(EnumType.STRING)
@@ -52,13 +50,13 @@ public class Cliente implements Serializable {
     private String celular;
     private String email;
     
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "idEndereco")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Endereco endereco;
 
-    @OneToMany(mappedBy = "cliente", orphanRemoval = true)
-    private List<Conta> contas;
+//    @OneToMany(mappedBy = "cliente", orphanRemoval = true)
+//    private List<Conta> contas;
     
     @OneToOne
     @JoinColumn(name = "idBanco")
