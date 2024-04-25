@@ -4,11 +4,13 @@ import org.labs.bank.banksling.models.Banco;
 import org.labs.bank.banksling.models.Cliente;
 import org.labs.bank.banksling.models.enums.TipoConta;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ContaRecordDto(
 		Long numeroConta,
 		Integer agencia,
 		TipoConta tipoConta,
 		Double saldo,
-		Banco banco,
-		Cliente cliente
+		@NotNull Banco banco,
+		@NotNull Cliente cliente
 		) { }
