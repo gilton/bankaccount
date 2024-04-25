@@ -32,6 +32,7 @@ public class Conta implements Serializable {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id_conta", updatable = false, nullable = false)
     private UUID idConta;
 	
 	@Column(name = "numero_conta")
@@ -44,12 +45,12 @@ public class Conta implements Serializable {
 	
 	private Double saldo;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, targetEntity = Banco.class)
 	@JoinColumn(name = "idBanco")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Banco banco;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Cliente.class)
 	@JoinColumn(name = "idCliente")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Cliente cliente;

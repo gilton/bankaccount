@@ -67,15 +67,7 @@ public class ClienteServiceImpl implements ClienteService {
 			}
 			return cliente;
 		}
-		else {
-			enderecoOpt = enderecoRepository.findById(enderecoId);
-			if( enderecoOpt.isEmpty() ) {
-				enderecoRepository.saveAndFlush(cliente.getEndereco());
-				enderecoOpt = Optional.of(cliente.getEndereco());
-			}
-			cliente.getEndereco().setIdEndereco( enderecoOpt.get().getIdEndereco() );
-			return cliente;
-		}
+		return cliente;
 	}
 	
 }
