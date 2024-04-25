@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.labs.bank.banksling.dtos.ContaRecordDto;
-import org.labs.bank.banksling.models.Banco;
-import org.labs.bank.banksling.models.Cliente;
 import org.labs.bank.banksling.models.Conta;
 import org.labs.bank.banksling.repositories.BancoRepository;
 import org.labs.bank.banksling.repositories.ClienteRepository;
@@ -60,19 +58,6 @@ public class ContaController {
 	public ResponseEntity<Object> saveConta(@RequestBody @Valid ContaRecordDto contaRecordDto) {
 		var conta = new Conta();
 		BeanUtils.copyProperties(contaRecordDto, conta);
-		
-		Optional<Banco> bancoOpt = bankRepository.findByCodigo(conta.getBanco().getCodigoBanco());
-		if(bancoOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Banco não encontrado para editar.");
-		}
-		conta.setBanco( bancoOpt.get() );
-		
-		Optional<Cliente> clienteOpt = clienteRepository.findByCPF(conta.getCliente().getCpf());
-		if(clienteOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
-		}
-		conta.setCliente( clienteOpt.get() );
-		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(conta));
 	}
 	
@@ -80,12 +65,25 @@ public class ContaController {
 	public ResponseEntity<Object> updateConta(@PathVariable(value="id") UUID id,
 												@RequestBody @Valid ContaRecordDto contaRecordDto) {
 		
-		Optional<Conta> bankOpt = repository.findById(id);
-		if(bankOpt.isEmpty()) {
+		Optional<Conta> contaOpt = repository.findById(id);
+		if(contaOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrado para editar.");
 		}
-		BeanUtils.copyProperties(contaRecordDto, bankOpt.get());
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save( bankOpt.get() ));
+		var contaASalvar = contaOpt.get();
+		var clienteID = contaOpt.get().getCliente().getIdCliente();
+		var bancoID = contaOpt.get().getBanco().getIdBanco();
+		
+		BeanUtils.copyProperties(contaRecordDto, contaASalvar);
+//		var bancoOpt = bankRepository.findById( bancoID );
+//		if( bancoOpt.isEmpty() ) {
+//			bankRepository.save( contaASalvar.getBanco() );
+//		}
+//		var clienteOpt = clienteRepository.findById( clienteID );
+//		if( clienteOpt.isEmpty() ) {
+//			clienteRepository.save( contaASalvar.getCliente() );
+//		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(repository.saveAndFlush( contaASalvar ));
 	}
 	
 	@DeleteMapping("/{id}")
