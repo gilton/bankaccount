@@ -8,8 +8,11 @@ import org.labs.bank.banksling.models.enums.TipoConta;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,17 +38,18 @@ public class Conta implements Serializable {
 	private Long numeroConta;
 	private Integer agencia;
 	
-	@Column(name = "tipo_conta")
+	@Column(name = "tipo_conta", length = 30)
+	@Enumerated(EnumType.STRING)
 	private TipoConta tipoConta;
 	
 	private Double saldo;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "idBanco")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Banco banco;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "idCliente")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 	private Cliente cliente;

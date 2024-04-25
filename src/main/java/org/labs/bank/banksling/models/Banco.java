@@ -1,7 +1,6 @@
 package org.labs.bank.banksling.models;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
@@ -26,22 +24,12 @@ public class Banco implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idBanco;
 	
-	@Column(name = "codigo_banco")
+	@Column(name = "codigo_banco", unique = true)
 	private Integer codigoBanco;
 	
-	@Column(name = "nom_banco")
+	@Column(name = "nom_banco", unique = true)
 	private String nomBanco;
 	
-	@OneToMany(mappedBy = "idConta", orphanRemoval = true)
-	private List<Conta> contas;
-	
-	@OneToMany(mappedBy = "idCliente", orphanRemoval = true)
-	private List<Cliente> clientes;
-
-	
-	public void addConta(Conta conta) {
-		contas.add(conta);
-	}
 	
 //  GETTs and SETTs
 	public UUID getIdBanco() {
@@ -68,12 +56,4 @@ public class Banco implements Serializable {
 		this.nomBanco = nomBanco;
 	}
 
-	public List<Conta> getContas() {
-		return contas;
-	}
-
-	public void setContas(List<Conta> contas) {
-		this.contas = contas;
-	}
-	
 }
