@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.labs.bank.banksling.dtos.ClienteRecordDto;
 import org.labs.bank.banksling.models.Cliente;
+import org.labs.bank.banksling.models.Endereco;
 import org.labs.bank.banksling.repositories.EnderecoRepository;
 import org.labs.bank.banksling.services.ClienteService;
 import org.springframework.beans.BeanUtils;
@@ -74,13 +75,15 @@ public class ClienteController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado.");
 		}
 		
-//		var enderecoOpt = encontrarEnderecoPorIDSenaoSalve(clienteOpt);
+		var enderecoOpt = enderecoRepository.findById(clienteOpt.get().getEndereco().getIdEndereco());
 		var cliente = clienteOpt.get();
 		BeanUtils.copyProperties(clienteRecordDto, cliente);
-		
-//		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
+
+		keepValuesFromDataEndereco(enderecoOpt, cliente);
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(cliente));
 	}
+
+	
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deleteCliente(@PathVariable(value="id") UUID id) {
@@ -94,24 +97,25 @@ public class ClienteController {
 	
 	
 //	Auxiliar Methods
-//	private void salvarOuAtualizarEndereco(Cliente cliente) {
-//		var enderecoOpt = enderecoRepository.findByRuaENumero(cliente.getEndereco().getRua(), cliente.getEndereco().getNumero());
-//		if (!enderecoOpt.isPresent()) {
-//			enderecoRepository.saveAndFlush(cliente.getEndereco());
-//			return;
-//		}
-//		cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
-//	}
-	
-//	private Optional<Endereco> encontrarEnderecoPorIDSenaoSalve(Optional<Cliente> clienteOpt) {
-//		var enderecoId = clienteOpt.get().getEndereco().getIdEndereco();
-//		Optional<Endereco> enderecoOpt = enderecoRepository.findById(enderecoId);
-//		
-//		if( enderecoOpt.isEmpty() ) {
-//			enderecoRepository.saveAndFlush(clienteOpt.get().getEndereco());
-//			enderecoOpt = Optional.of(clienteOpt.get().getEndereco());
-//		}
-//		return enderecoOpt;
-//	}
+	private void keepValuesFromDataEndereco(Optional<Endereco> enderecoOpt, Cliente cliente) {
+		if( Objects.isNull( cliente.getEndereco().getIdEndereco() ) ) {
+			cliente.getEndereco().setIdEndereco(enderecoOpt.get().getIdEndereco());
+		}
+		if( Objects.isNull( cliente.getEndereco().getRua() ) ) {
+			cliente.getEndereco().setRua( enderecoOpt.get().getRua() );
+		}
+		if( cliente.getEndereco().getNumero() == 0 ) {
+			cliente.getEndereco().setNumero( enderecoOpt.get().getNumero() );
+		}
+		if( Objects.isNull( cliente.getEndereco().getComplemento() ) ) {
+			cliente.getEndereco().setComplemento( enderecoOpt.get().getComplemento() );
+		}
+		if( Objects.isNull( cliente.getEndereco().getCep() ) ) {
+			cliente.getEndereco().setCep( enderecoOpt.get().getCep() );
+		}
+		if( Objects.isNull( cliente.getEndereco().getCidade() ) ) {
+			cliente.getEndereco().setCidade( enderecoOpt.get().getCidade() );
+		}
+	}
 	
 }
